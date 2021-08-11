@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.security.amigos.code.security.ApplicationUserRole.STUDENT;
+
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -24,8 +26,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*")
-                .permitAll()
+                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                .antMatchers("/api/v1/students/*").hasRole(STUDENT.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -38,7 +40,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails user = User.builder()
                 .username("joao")
                 .password(getPasswordEncoder().encode("1234"))
-                .roles(ApplicationUserRole.STUDENT.name()) //ROLE_STUDENT
+                .roles(STUDENT.name()) //ROLE_STUDENT
                 .build();
 
         UserDetails admin =User.builder()
