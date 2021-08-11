@@ -1,5 +1,7 @@
 package com.security.amigos.code.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,11 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
+@Data
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,7 +37,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
                 .username("joao")
-                .password("1234")
+                .password(getPasswordEncoder().encode("1234"))
                 .roles("STUDENT") //ROLE_STUDENT
                 .build();
 
