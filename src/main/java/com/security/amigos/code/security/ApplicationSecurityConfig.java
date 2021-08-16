@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,6 +22,7 @@ import static com.security.amigos.code.security.ApplicationUserRole.*;
 @EnableWebSecurity
 @AllArgsConstructor
 @Data
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -31,10 +33,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/v1/students/*").hasRole(STUDENT.name())
-                .antMatchers(HttpMethod.DELETE,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
-                .antMatchers(HttpMethod.POST,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
-                .antMatchers(HttpMethod.PUT,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
-                .antMatchers(HttpMethod.GET,"/management/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
+                //.antMatchers(HttpMethod.DELETE,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
+                //.antMatchers(HttpMethod.POST,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
+                //.antMatchers(HttpMethod.PUT,"/management/**").hasAuthority(STUDENT_WRITE.getPermission())
+                //.antMatchers(HttpMethod.GET,"/management/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
