@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,7 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import static com.security.amigos.code.security.ApplicationUserRole.STUDENT;
+import static com.security.amigos.code.security.ApplicationUserPermission.STUDENT_WRITE;
+import static com.security.amigos.code.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +31,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/v1/students/*").hasRole(STUDENT.name())
+                .antMatchers(HttpMethod.DELETE,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.POST,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.PUT,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.GET,"/management/api/v1/students/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
