@@ -31,10 +31,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/v1/students/*").hasRole(STUDENT.name())
-                .antMatchers(HttpMethod.DELETE,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
-                .antMatchers(HttpMethod.POST,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
-                .antMatchers(HttpMethod.PUT,"/management/api/v1/students/**").hasAuthority(STUDENT_WRITE.name())
-                .antMatchers(HttpMethod.GET,"/management/api/v1/students/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
+                .antMatchers(HttpMethod.DELETE,"/management/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.POST,"/management/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.PUT,"/management/**").hasAuthority(STUDENT_WRITE.name())
+                .antMatchers(HttpMethod.GET,"/management/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -47,19 +47,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails user = User.builder()
                 .username("james")
                 .password(getPasswordEncoder().encode("1234"))
-                .roles(STUDENT.name()) //ROLE_STUDENT
+                .authorities(STUDENT.getGrantedAuthorities())
                 .build();
 
         UserDetails admin =User.builder()
                 .username("admin")
                 .password(getPasswordEncoder().encode("admin"))
-                .roles(ApplicationUserRole.ADMIN.name())
+                .authorities(ADMIN.getGrantedAuthorities())
                 .build();
 
         UserDetails admintrainee =User.builder()
                 .username("admin_trainee")
                 .password(getPasswordEncoder().encode("admin"))
-                .roles(ApplicationUserRole.ADMINTRAINEE.name())
+                .authorities(ADMINTRAINEE.getGrantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(
